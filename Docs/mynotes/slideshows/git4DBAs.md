@@ -64,8 +64,8 @@ theme: default
 ### 4. Key Terms
 
 * **Clone**: Copy a repository to your local machine.
-* **Commit**: Save changes with a message.
 * **Stage**: Prepare changes for a commit.
+* **Commit**: Save changes with a message.
 * **Pull**: Fetch changes from a remote repository.
 * **Push**: Send changes to a remote repository.
 
