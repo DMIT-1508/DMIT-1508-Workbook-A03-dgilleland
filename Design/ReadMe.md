@@ -16,7 +16,7 @@ I got the following question from a student in class about Repeating Groups.
 
 > Good evening, can you explain what repeating groups are? In the powerpoint you split the ItemNumber, Description, Quantity, Price, and Amount out of the larger table and I'm wondering how those are repeating?
 >
-> ![](./images/what-are-repeating-groups.png)
+> ![](./what-are-repeating-groups.png)
 
 I gave this reply (which has been my best explanation to date).
 
