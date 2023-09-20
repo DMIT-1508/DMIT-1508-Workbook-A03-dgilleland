@@ -4,7 +4,9 @@
 
 > Learn how you create your own ERDs with LucidChart in [this tutorial](https://training.lucid.co/entity-relationship-diagrams-in-lucidchart-1).
 
-![Logical ERD](./Logical-ERD.png)
+| Comments | Diagram |
+| :--- | :--- |
+| Items to identify in this ERD are the **entities**, **attributes**, **relationships**, **cardinality** and **optionality**. | ![Logical ERD](./Logical-ERD.png) |
 
 ## Normalization
 
