@@ -51,6 +51,7 @@
     - Check for partial dependencies, if any (2NF)
     - Check for transitive dependencies, if any (3NF)
     - List key questions to ask yourself when checking whether you've correctly processed meta-data through 1NF to 3NF.
+    - Create ERDs
 
 
 ## Sep 20
@@ -61,6 +62,7 @@
 
 ## Sep 22
 
+- [ ] Creating VS Code Profiles
 - [ ] Documenting Your Lab
   - [ ] Writing normalization steps in Markdown
   - [ ] Referencing ERD images in Markdown
