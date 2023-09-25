@@ -71,3 +71,7 @@
   - [ ] Writing normalization steps in Markdown
   - [ ] Referencing ERD images in Markdown
 
+## Sep 25
+
+- [ ] Intro to SQL
+  - Note how to read a physical ERD for data types and optional (`NULL`) attributes
