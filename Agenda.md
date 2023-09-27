@@ -1,6 +1,10 @@
 # Agenda
 
 > These are my notes on what I plan to teach in each upcoming class. For the timeline of where we are today, see [the current schedule](./README.md#schedule).
+>
+> ## *... Warn those who are idle ..., encourage the disheartened, help the weak, be patient with everyone.*
+>
+> > My philosophy of teaching, taken from [the source](https://www.bible.com/bible/111/1TH.5.14.NIV)
 
 ----
 
@@ -51,6 +55,7 @@
     - Check for partial dependencies, if any (2NF)
     - Check for transitive dependencies, if any (3NF)
     - List key questions to ask yourself when checking whether you've correctly processed meta-data through 1NF to 3NF.
+    - Create ERDs
 
 
 ## Sep 20
@@ -61,7 +66,16 @@
 
 ## Sep 22
 
+- [ ] Creating VS Code Profiles
+  - Press the <kbd>F1</kbd> key to open the Command Palette
+  - Type `Create Profile` and press <kbd>Enter</kbd>
+  - You might want to choose a theme (again, press <kbd>F1</kbd> to get started)
+  - Again, using the <kbd>F1</kbd>, enter "Show Recommended Extensions" and then install the Workspace Recommendations.
 - [ ] Documenting Your Lab
   - [ ] Writing normalization steps in Markdown
   - [ ] Referencing ERD images in Markdown
 
+## Sep 25
+
+- [ ] Intro to SQL
+  - Note how to read a physical ERD for data types and optional (`NULL`) attributes
