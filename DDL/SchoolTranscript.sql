@@ -107,9 +107,30 @@ CREATE TABLE StudentCourses
 )
 
 
+
+-- Practice for ALTER TABLE and CREATE INDEX statements
+
 -- Add a column to the Students table for the student's Email. Make it up to 80 characters long.
+ALTER TABLE Students
+    ADD Email varchar(80) NULL
+
 -- As a separate ALTER TABLE statements, add a CHECK constraint to make sure the email is "valid"
 -- by expecting it to have the '@' symbol somewhere in the email.
+ALTER TABLE Students
+    ADD CONSTRAINT CK_Students_Email
+        CHECK (Email LIKE '%@%')
+
 -- Add a column to the StudentCourses table called 'Paid'; make it a bit data type.
+ALTER TABLE StudentCourses
+    ADD Paid bit NULL
 -- In a separate ALTER TABLE statement, add a default for the 'Paid' column to be '0'.
+ALTER TABLE StudentCourses
+    ADD CONSTRAINT DF_StudentCourses_Paid
+        DEFAULT (0) FOR Paid
 -- Lastly, add non-clustered indexes for all the foreign keys in the database.
+CREATE NONCLUSTERED INDEX IX_StudentCourses_Students
+    ON StudentCourses (StudentId)
+CREATE NONCLUSTERED INDEX IX_StudentCourses_Courses
+    ON StudentCourses (CourseNumber)
+-- Note: I could have added the indexes when I created the tables, but I wanted to show you how to add them after the fact.
+GO

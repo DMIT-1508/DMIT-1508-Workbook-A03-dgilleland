@@ -20,7 +20,7 @@ ORDER BY clause - Sort our final results
 SELECT  'Dan', 'Gilleland'
 
 -- Simple Select with expressions
-SELECT  'Dan' + ' ' + 'Gilleland', 18 * 52, '5' + '10'
+SELECT  'Dan' + ' ' + 'Gilleland', 23 * 52, '5' + '10'
 --        textual information      numbers    textual
 
 -- Specify a column name with some hard-code/calculated values
@@ -64,7 +64,7 @@ FROM    Student
 --      and sort the results by the last name
 SELECT    FirstName, LastName
 FROM      Student
-ORDER BY  LastName -- default is to sort in ASCENDING order
+ORDER BY  LastName ASC -- default is to sort in ASCENDING order
 -- 2.d
 SELECT    FirstName, LastName
 FROM      Student
@@ -75,14 +75,18 @@ SELECT    FirstName, LastName
 FROM      Student
 ORDER BY  LastName, FirstName
 
+-- 2.f.
+SELECT  StudentID, 'Hello ' + FirstName + ' ' + LastName AS 'Greeting'
+FROM    Student
+
 --3. Select the CourseId and CourseName of all the courses. Use the column aliases of Course ID and Course Name
 SELECT  CourseId AS 'Course ID', CourseName AS 'Course Name'
 FROM    Course
 
 --4. Select all the course information for courseID 'DMIT101'
 -- I will mark the following as a ZERO
---SELECT  * -- All columns
---FROM    Course
+-- SELECT  * -- All columns
+-- FROM    Course
 SELECT CourseID, CourseName, CourseHours, MaxStudents, CourseCost
 FROM   Course
 WHERE  CourseID = 'DMIT101'
@@ -113,6 +117,11 @@ FROM    Course AS C -- I can have an alias to the table name
 WHERE   C.CourseHours < 96
 
 -- Type with me the following...
+SELECT  S.BalanceOwing, S.StreetAddress, S.City
+FROM    Student AS S
+WHERE   S.BalanceOwing > 0
+
+-- eg:
 SELECT  ST.LastName, ST.DateHired, ST.DateReleased
 FROM    Staff AS ST -- The use of the AS keyword in producing table/column aliases is optional
                     -- but it can be a good idea for readability.
