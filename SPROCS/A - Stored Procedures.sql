@@ -1,7 +1,7 @@
 --Stored Procedures (Sprocs)
 --  A Stored Procedure is a controlled execution of some SQL script.
 
-USE [A04-2023-School]
+USE [A03-2023-School]
 GO
 
 /* *******************************************

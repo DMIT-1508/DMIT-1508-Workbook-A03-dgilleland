@@ -1,5 +1,5 @@
 --Outer Joins Exercise
-USE [A04-2023-School]
+USE [A03-2023-School]
 GO
 
 --1. Select All position descriptions and the staff ID's that are in those positions

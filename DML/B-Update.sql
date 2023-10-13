@@ -1,5 +1,5 @@
 -- Update Examples
-USE [A04-2023-School]
+USE [A03-2023-School]
 GO -- Execute the code up to this point as a single batch
 
 /*  Notes:

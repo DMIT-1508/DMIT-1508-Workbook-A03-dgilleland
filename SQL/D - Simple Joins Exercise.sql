@@ -1,5 +1,5 @@
 --Joins Exercise 1
-USE [A04-2023-School]
+USE [A03-2023-School]
 GO
 SELECT DB_NAME()
 GO
