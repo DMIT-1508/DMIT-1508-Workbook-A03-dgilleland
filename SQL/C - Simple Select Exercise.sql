@@ -2,7 +2,7 @@
 -- This sample set illustrates the GROUP BY syntax and the use of Aggregate functions
 -- with GROUP BY.
 -- It also demonstrates the HAVING clause to filter on aggregate values.
-USE [A0X-School]
+USE [A03-2023-School]
 GO
 SELECT DB_NAME()
 GO
@@ -32,7 +32,7 @@ SELECT  PaymentTypeID,                              -- Non-aggregate column (btw
         COUNT(PaymentTypeID) AS 'Count of Pay Type' -- Aggregate column
 FROM    Payment
 GROUP BY PaymentTypeID
-ORDER BY COUNT(PaymentTypeID)
+ORDER BY COUNT(PaymentTypeID) DESC
 -- HELP! Is the answer above correct?? How can we fix it?
 /* A note on ORDER BY
    - The ORDER BY clause will, by default, do the sorting in ascending order.

@@ -1,5 +1,5 @@
 --Joins Exercise 1
-USE [A0X-School]
+USE [A03-2023-School]
 GO
 SELECT DB_NAME()
 GO
@@ -24,7 +24,7 @@ FROM    Student AS S
 
 --2.	Select the Staff full names and the Course ID's they teach.
 --      Order the results by the staff name then by the course Id
-SELECT  DISTINCT -- The DISTINCT keyword will remove duplate rows from the results
+SELECT  DISTINCT -- The DISTINCT keyword will remove duplicate rows from the results
         FirstName + ' ' + LastName AS 'Staff Full Name',
         CourseId
 FROM    Staff AS S

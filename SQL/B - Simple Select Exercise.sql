@@ -2,7 +2,7 @@
 -- This set of exercises demonstrates performing simple Aggregate functions
 -- to get results such as SUM(), AVG(), COUNT() 
 -- All aggregates are done using built-in functions in the database
-USE [A0X-School]
+USE [A03-2023-School]
 GO
 SELECT DB_NAME()
 GO
@@ -20,6 +20,7 @@ FROM    Registration
 
 
 --2.	Select the average Mark of all the students who are taking DMIT104
+-- SELECT * FROM Registration
 SELECT  AVG(Mark) AS 'Average Mark' -- Some Aggregate functions expect to work with numbers
 FROM    Registration
 WHERE   CourseId = 'DMIT104'
@@ -45,7 +46,11 @@ SELECT  COUNT(DateReleased) AS 'Retired Staff'
 FROM    Staff
 
 --4.	Select how many students have taken (have a grade for) DMIT152
-SELECT  COUNT(Mark) AS 'Student Count for DMIT152'
+SELECT  COUNT(Mark) AS 'Students who have taken DMIT152'
+FROM    Registration
+WHERE   CourseId = 'DMIT152'
+
+SELECT  COUNT(1) AS 'Student Count for DMIT152'
 FROM    Registration
 WHERE   CourseId = 'DMIT152'
 
