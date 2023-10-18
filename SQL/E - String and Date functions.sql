@@ -161,16 +161,25 @@ FROM    Course
 -- 7. Select the characters in the position description from characters 8 to 12
 --    (five characters worth) for PositionID 5
 -- TODO: Student Answer Here...
-
+SELECT  SUBSTRING(PositionDescription, 8, 5)
+FROM    Position
+WHERE   PositionId = 5
 
 -- 8. Select all the Student First Names as upper case.
 -- TODO: Student Answer Here...
+SELECT  UPPER(FirstName)
+FROM    Student
 
 
 -- 9. Select the First Names of students whose first names are 3 characters long.
 -- TODO: Student Answer Here...
-
+SELECT  FirstName
+FROM    Student
+WHERE   LEN(FirstName) = 3
 
 -- 10. Select the staff names and the name of the month they were hired
 --     and order the results by the month number.
 -- TODO: Student Answer Here...
+SELECT  FirstName, LastName, DATENAME(mm, DateHired) AS 'Month Hired'
+FROM    Staff
+ORDER BY DATEPART(mm, DateHired)
