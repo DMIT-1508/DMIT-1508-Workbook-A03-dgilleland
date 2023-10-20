@@ -60,7 +60,7 @@ This document introduces the concept of Aggregate functions using single tables.
 >   
 > Do a `SELECT *` on that table to see all the data and to see if it might have what you are looking for.
 > 
-> ![B10 Data](./Images/B-10-Data.png)
+> ![B10 Data](Images/B-10-Data.png)
 
 
 ----
