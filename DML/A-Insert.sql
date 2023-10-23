@@ -1,7 +1,8 @@
 -- Insert Examples
 USE [A03-2023-School]
 GO -- Execute the code up to this point as a single batch
-
+SELECT DB_NAME() AS 'Active Database'
+GO
 /*  Notes:
     The syntax for the INSERT statement is
 
