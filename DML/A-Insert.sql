@@ -57,6 +57,11 @@ FROM    Position
 WHERE   PositionID NOT IN (SELECT PositionID FROM Staff)
 --      Add Sheldon Murray as the new Assistant Dean.
 -- TODO: Student Answer Here....
+INSERT INTO Staff(LastName, DateHired, FirstName, PositionID)
+VALUES ('Murray', GETDATE(), 'Sheldon',
+        (SELECT PositionID
+        FROM   Position
+        WHERE  PositionDescription = 'Assistant Dean'))
 
 -- 3. There are three additional clubs being started at the school:
 --      - START - Small Tech And Research Teams
