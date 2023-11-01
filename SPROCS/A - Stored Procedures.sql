@@ -3,7 +3,8 @@
 
 USE [A03-2023-School]
 GO
-
+SELECT DB_NAME() AS 'Active Database'
+GO
 /* *******************************************
   Each Stored Procedure has to be the first statement in a batch,
     so place a GO statement in-between each question to execute 
@@ -24,14 +25,13 @@ GO
  * Introduction */
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'GetName')
-    DROP PROCEDURE GetName
+DROP PROCEDURE IF EXISTS GetName
 GO
 CREATE PROCEDURE GetName
     -- Parameters here
 AS
     -- Body of procedure here
-    SELECT  'Dan', 'Gilleland'
+    SELECT  'Dan' AS 'FirstName', 'Gilleland' AS 'LastName'
     -- How would you change the line above to put column names on the result set?
 RETURN
 GO
@@ -53,8 +53,8 @@ PRINT @Cost
 --  It represents a single block of code, that is, a single set of instructions.
 --  These are helpful especially with the IF/ELSE flow-control statements.
 --  Consider the following example.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'GuessRows')
-    DROP PROCEDURE GuessRows
+GO
+DROP PROCEDURE IF EXISTS GuessRows
 GO
 -- 
 CREATE PROCEDURE GuessRows
@@ -68,6 +68,8 @@ AS
         RAISERROR('Wrong guess. Club has a different number of rows', 16, 1)
         IF @clubRows > @actual
             RAISERROR('Too high a guess', 16, 1)
+            --        \                /  |   |_ Severity
+            --         \  message     /   |_ Error Code
         ELSE
             RAISERROR('Too low a guess', 16, 1)
     END
@@ -79,14 +81,15 @@ AS
 RETURN
 GO
 EXEC GuessRows 5 -- Call the GuessRows procedure that's in the database.
+-- SELECT COUNT(ClubId) FROM Club
 
 
 /*******************
  * Sample Problems */
 
 --1. Create a stored procedure called "HonorCourses" to select all the course names that have averages > 80%.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'HonorCourses')
-    DROP PROCEDURE HonorCourses
+GO
+DROP PROCEDURE IF EXISTS HonorCourses
 GO
 CREATE PROCEDURE HonorCourses
     -- Parameters here
@@ -104,8 +107,8 @@ EXEC HonorCourses
 
 
 --2. Create a stored procedure called "HonorCoursesOneTerm" to select all the course names that have average > 80% in semester 2004J.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'HonorCoursesOneTerm')
-    DROP PROCEDURE HonorCoursesOneTerm
+GO
+DROP PROCEDURE IF EXISTS HonorCoursesOneTerm
 GO
 CREATE PROCEDURE HonorCoursesOneTerm
 AS
