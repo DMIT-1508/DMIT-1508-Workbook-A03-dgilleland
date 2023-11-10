@@ -1,7 +1,7 @@
 --  Stored Procedures (Sprocs)
 -- Demonstrate using Transactions in a Stored Procedure
 
-USE [A04-2023-School]
+USE [A03-2023-School]
 GO
 SELECT DB_NAME() AS 'Active Database'
 GO
@@ -76,7 +76,8 @@ AS
         IF @@ERROR <> 0 OR @@ROWCOUNT = 0
         BEGIN
             --PRINT('RAISERROR + ROLLBACK')
-            RAISERROR('Unable to withdraw student', 16, 1)
+            RAISERROR('Unable to withdraw student', 16, 1) -- Report the problem
+            -- ! Revert any previous changes
             ROLLBACK TRANSACTION -- reverses the "temporary" changes to the database and closes the transaction
         END
         ELSE
@@ -112,6 +113,7 @@ GO
 
 
 -- 3. Add a stored procedure called AdjustMarks that takes in a course ID. The procedure should adjust the marks of all students for that course by increasing the mark by 10%. Be sure that nobody gets a mark over 100%.
+--    SELECT * FROM Registration
 DROP PROCEDURE IF EXISTS AdjustMarks
 GO
 CREATE PROCEDURE AdjustMarks
@@ -175,12 +177,14 @@ CREATE PROCEDURE RegisterStudent
     @CourseID   char(7),
     @Semester   char(5)
 AS
+    -- First pre-condition is always to screen for NULL values in the parameters
     IF @StudentID IS NULL OR @CourseID IS NULL OR @Semester IS NULL
     BEGIN
         RAISERROR ('You must provide a studentid, courseid, and semester', 16, 1)
     END
     ELSE
     BEGIN
+        -- Second pre-condition is to ensure there is room in the course for the new student
         -- Declare a bunch of local/temp variables
         -- Each variable can only hold a single value at a time
         DECLARE @MaxStudents    smallint
@@ -191,11 +195,12 @@ AS
         SELECT @CurrentCount = COUNT (StudentID) FROM Registration WHERE CourseId = @CourseID AND Semester = @Semester
         SELECT @CourseCost = CourseCost FROM Course WHERE CourseId = @CourseID
 
-        IF @MaxStudents >= @currentcount -- This is the "range" of unacceptable values
+        -- If the number of enrolled students is at the "Max" allowed, we can't register the student
+        IF @CurrentCount >= @MaxStudents -- This is the "range" of unacceptable values
         BEGIN
             RAISERROR('The course is already full', 16, 1)
         END
-        ELSE
+        ELSE -- All the pre-flight checks have passsed, we can continue with our main mission
         BEGIN
             BEGIN TRANSACTION
             -- 1st DML statement
