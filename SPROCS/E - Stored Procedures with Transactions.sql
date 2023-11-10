@@ -1,25 +1,47 @@
 --  Stored Procedures (Sprocs)
 -- Demonstrate using Transactions in a Stored Procedure
 
-USE [A03-2023-School]
+USE [A04-2023-School]
 GO
-
+SELECT DB_NAME() AS 'Active Database'
+GO
 /*
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'SprocName')
-    DROP PROCEDURE SprocName
-GO
-CREATE PROCEDURE SprocName
-    -- Parameters here
-AS
-    -- Body of procedure here
-RETURN
-GO
+    DROP PROCEDURE IF EXISTS SprocName
+    GO
+    CREATE PROCEDURE SprocName
+        -- Parameters here
+    AS
+        -- Body of procedure here
+    RETURN
+    GO
 */
 
+/* What are Transactions?
+
+    A transaction is a guarantee that all changes to a set of database tables will succeed or fail as an entire group.
+    This ensures that the database will not be "corrupted" by partial modifications.
+*/
+
+/* Key Points on Transactions:
+
+    1) When are Transactions necessary in Stored Procedures?
+        Whenever you have 2 or more of any INSERT, UPDATE and/or DELETE statements.
+    2) What are the 3 key parts of Transactions in SQL?
+        Transactions are set up by the programmer
+        - BEGIN TRANSACTION - Sets up the database server so that it can revert any changes that are made
+        - ROLLBACK TRANSACTION - Revert all the changes since the transaction began
+        - COMMIT TRANSACTION - Finalize the the changes, making them permanent
+    3) How many times should a BEGIN TRANSACTION statement appear in a stored procedure?
+        It should only appear once.
+    4) How many times should a ROLLBACK TRANSACTION statement appear in a stored procedure?
+        It should appear for every INSERT, UPDATE and/or DELETE that exists in your code after the transaction has begun.
+        Each of those INSERT, UPDATE and DELETE statements could potentially fail. If they do fail, you should perform a ROLLBACK.
+    5) How many times should a COMMIT TRANSACTION statement appear in a stored procedure?
+        It should only appear once. It should be the final possible path in your SPROC that represents success.
+*/
 
 -- 1. Add a stored procedure called TransferCourse that accepts a student ID, semester, and two course IDs: the one to move the student out of and the one to move the student in to.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'TransferCourse')
-    DROP PROCEDURE TransferCourse
+DROP PROCEDURE IF EXISTS TransferCourse
 GO
 CREATE PROCEDURE TransferCourse
     -- Parameters here
@@ -47,6 +69,10 @@ AS
           AND  Semester = @Semester       -- and the correct semester
           AND  (WithdrawYN = 'N' OR WithdrawYN IS NULL) -- and they are not already withdrawn
         --         Check for error/rowcount
+        -- @@ERROR will hold the Error Code from the previous (most recent) INSERT, UPDATE or DELETE.
+        -- @@ERROR will have a value of zero if the INSERT, UPDATE or DELETE was successful
+        -- @@ERROR should ALWAYS be checked immediately after the INSERT, UPDATE or DELETE
+        -- I decided to also check @@ROWCOUNT because I expect that there should be one row changed
         IF @@ERROR <> 0 OR @@ROWCOUNT = 0
         BEGIN
             --PRINT('RAISERROR + ROLLBACK')
@@ -86,8 +112,7 @@ GO
 
 
 -- 3. Add a stored procedure called AdjustMarks that takes in a course ID. The procedure should adjust the marks of all students for that course by increasing the mark by 10%. Be sure that nobody gets a mark over 100%.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'AdjustMarks')
-    DROP PROCEDURE AdjustMarks
+DROP PROCEDURE IF EXISTS AdjustMarks
 GO
 CREATE PROCEDURE AdjustMarks
     -- Parameters here
@@ -104,13 +129,13 @@ AS
         BEGIN TRANSACTION -- Don't forget this....
         -- Step 1) Deal with those who "could" get 100%+ by just giving them 100%
         -- You can use PRINT() statements temporarily as a way to see what stage/step is run when you test the SPROC
-	-- BUT you must REMEMBER TO REMOVE THE PRINT STATEMENTS in your final version of the stored procedure
+    -- BUT you must REMEMBER TO REMOVE THE PRINT STATEMENTS in your final version of the stored procedure
         PRINT('Step 1 - Update Registration...') -- Will output in the messages window
         UPDATE Registration
            SET Mark = 100            -- the max mark possible
         WHERE  CourseId = @CourseID
           AND  Mark * 1.1 > 100      -- whereever adding 10% would give more than 100% of a final mark
-        IF @@ERROR > 0 -- Errors only - it's ok to have zero rows affected
+        IF @@ERROR <> 0 -- check for Errors only; it's ok to have zero rows affected
         BEGIN
             PRINT('RAISERROR + ROLLBACK')
             RAISERROR('Problem updating marks', 16, 1)
@@ -121,7 +146,7 @@ AS
             -- Step 2) Raise all the other marks
             PRINT('Step 2 - Update Registration...')
             UPDATE Registration
-               SET Mark = Mark * 1.1
+               SET Mark = Mark * 1.1 -- a 10% increase
             WHERE  CourseId = @CourseID
               AND  Mark * 1.1 <= 100
 
@@ -142,8 +167,7 @@ RETURN
 GO
 
 -- 4. Create a stored procedure called RegisterStudent that accepts StudentID, CourseID and Semester as parameters. If the number of students in that course and semester are not greater than the Max Students for that course, add a record to the Registration table and add the cost of the course to the students balance. If the registration would cause the course in that semester to have greater than MaxStudents for that course raise an error.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'RegisterStudent')
-    DROP PROCEDURE RegisterStudent
+DROP PROCEDURE IF EXISTS RegisterStudent
 GO
 
 CREATE PROCEDURE RegisterStudent
@@ -167,7 +191,7 @@ AS
         SELECT @CurrentCount = COUNT (StudentID) FROM Registration WHERE CourseId = @CourseID AND Semester = @Semester
         SELECT @CourseCost = CourseCost FROM Course WHERE CourseId = @CourseID
 
-        IF @MaxStudents >= @currentcount 
+        IF @MaxStudents >= @currentcount -- This is the "range" of unacceptable values
         BEGIN
             RAISERROR('The course is already full', 16, 1)
         END
@@ -207,8 +231,7 @@ RETURN
 GO
 
 -- 5. Add a stored procedure called WitnessProtection that erases all existence of a student from the database. The stored procedure takes the StudentID, first and last names, gender, and birthdate as parameters. Ensure that the student exists in the database before removing them (all the parameter values must match).
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'WitnessProtection')
-    DROP PROCEDURE WitnessProtection
+DROP PROCEDURE IF EXISTS WitnessProtection
 GO
 
 CREATE PROCEDURE WitnessProtection
@@ -283,8 +306,7 @@ RETURN
 GO
 
 -- 6. Create a procedure called StudentPayment that accepts Student ID and paymentamount as parameters. Add the payment to the payment table and adjust the students balance owing to reflect the payment.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'StudentPayment')
-    DROP PROCEDURE StudentPayment
+DROP PROCEDURE IF EXISTS StudentPayment
 GO
 
 CREATE PROCEDURE StudentPayment
@@ -327,8 +349,7 @@ RETURN
 GO
 
 -- 7. Create a stored procedure called WithdrawStudent that accepts a StudentID, CourseId, and semester as parameters. Withdraw the student by updating their Withdrawn value to 'Y' and subtract 1/2 of the cost of the course from their balance. If the result would be a negative balance set it to 0.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'WithdrawStudent')
-    DROP PROCEDURE WithdrawStudent
+DROP PROCEDURE IF EXISTS WithdrawStudent
 GO
 
 CREATE PROCEDURE WithdrawStudent
@@ -408,9 +429,8 @@ AS
 RETURN
 GO
 
--- 8. Create a stored procedure called ArchiveStudentGrades that will accept a year and will archive all grade records from that year from the grade table to an ArchiveGrade table. Copy all the appropriate records from the grade table to the ArchiveGrade table and delete them from the grade table. The ArchiveGrade table will have the same definition as the grade table but will not have any constraints.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ArchiveGrade')
-    DROP TABLE ArchiveGrade
+-- 8. Create a stored procedure called ArchiveStudentGrades that will accept a year and will archive all grade records from that year from the registration table to an ArchiveGrade table. Copy all the appropriate records from the grade table to the ArchiveGrade table and delete them from the grade table. The ArchiveGrade table will have the same definition as the grade table but will not have any constraints.
+DROP TABLE IF EXISTS ArchiveGrade
 
 CREATE TABLE ArchiveGrade
 (
@@ -423,8 +443,7 @@ CREATE TABLE ArchiveGrade
 )
 GO
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'ArchiveStudentGrades')
-    DROP PROCEDURE ArchiveStudentGrades
+DROP PROCEDURE IF EXISTS ArchiveStudentGrades
 GO
 
 CREATE PROCEDURE ArchiveStudentGrades
@@ -463,9 +482,14 @@ AS
 RETURN
 GO
 
+-- I should test my stored procedures to see if they work
+EXEC ArchiveStudentGrades '2000'
+EXEC ArchiveStudentGrades '2001'
+EXEC ArchiveStudentGrades '2002'
+GO
+
 -- 9. Create a stored procedure called ArchivePayments. This stored procedure must transfer all payment records to the StudentPaymentArchive table. After archiving, delete the payment records.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudentPaymentArchive')
-    DROP TABLE StudentPaymentArchive
+DROP TABLE IF EXISTS StudentPaymentArchive
 
 CREATE TABLE StudentPaymentArchive
 (
