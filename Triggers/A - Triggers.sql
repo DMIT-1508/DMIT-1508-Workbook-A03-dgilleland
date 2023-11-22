@@ -1,7 +1,7 @@
 -- Triggers Samples
 USE [A03-2023-School]
 GO
-SELECT DB_NAME() AS 'Active Table'
+SELECT DB_NAME() AS 'Active Database'
 GO
 /*
 DROP TRIGGER IF EXISTS Table_TriggerType
@@ -262,7 +262,7 @@ CREATE TRIGGER Student_Update_AuditBalanceOwing
 ON Student
 FOR UPDATE -- Inserting does not CHANGE, it CREATES data; Deleting does not CHANGE, it removes data
 AS
-	-- Body of Trigger
+    -- Body of Trigger
     IF @@ROWCOUNT > 0 AND UPDATE(BalanceOwing)
     --                    \ Function         /
     --                     \  Returns true if that column's data changed
@@ -275,8 +275,8 @@ AS
 	    BEGIN
 		    RAISERROR('Insert into BalanceOwingLog Failed',16,1)
             ROLLBACK TRANSACTION
-		END	
-	END
+        END    
+    END
 RETURN
 GO
 
